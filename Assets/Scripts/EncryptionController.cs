@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 
 public class EncryptionController
@@ -12,51 +13,59 @@ public class EncryptionController
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     };
     
-    [SerializeField] private string _inputText;
-    [SerializeField] private string _cypherWord;
+    // [SerializeField] private string _inputText;
+    // [SerializeField] private string _cypherWord;
+
+    [SerializeField] private TMP_InputField _inputText;
+    [SerializeField] private TMP_InputField _outputText;
+    [SerializeField] private TMP_InputField _cypherInputText;
 
     private string _cypherBet;
 
-    private void Awake()
+    public void EncodeText()
+    {
+        CreateCypher();
+        
+        string encodedText = EncodeMessage(_inputText.text);
+
+        _outputText.text = encodedText;
+    }
+
+    public void DecodeText()
+    {
+        CreateCypher();
+
+        string decodedText = DecodeMessage(_inputText.text);
+
+        _outputText.text = decodedText;
+    }
+
+    private void CreateCypher()
     {
         var stringBuilder = new StringBuilder(string.Empty);
         
         int index = 0;
 
-        while (index < _cypherWord.Length - 1)
+        while (index < _cypherInputText.text.Length - 1)
         {
             foreach (var character in ALPHABET)
             {
-                if (index >= _cypherWord.Length) break;
-                if (character == _cypherWord[index])
+                if (index >= _cypherInputText.text.Length) break;
+                if (character == _cypherInputText.text[index])
                 {
                     stringBuilder.Append(character);
                     index++;
                 }
             }
         }
-
-        Debug.Log(stringBuilder);
-
+        
         for (int i = 0; i < ALPHABET.Length; i++)
         {
             if (stringBuilder.ToString().Contains(ALPHABET[i])) continue;
             stringBuilder.Append(ALPHABET[i]);
         }
         
-        Debug.Log(stringBuilder);
-
         _cypherBet = stringBuilder.ToString();
-
-        string encodedText = EncodeMessage(_inputText);
-        
-        Debug.Log($"Input Text: {_inputText}");
-
-        Debug.Log($"Encoded Text: {encodedText}");
-        
-        string decodedText = DecodeMessage(encodedText);
-
-        Debug.Log($"Decoded Text: {decodedText}");
     }
 
     private string EncodeMessage(string message)
@@ -96,7 +105,7 @@ public class EncryptionController
 
             cypherIndex++;
 
-            if (cypherIndex >= _cypherWord.Length) cypherIndex = 0;
+            if (cypherIndex >= _cypherInputText.text.Length) cypherIndex = 0;
         }
 
         return encodedText.ToString();
@@ -112,9 +121,9 @@ public class EncryptionController
         {
             var regex = new Regex("[^a-zA-Z]");
 
-            if (regex.IsMatch(_inputText[i].ToString()))
+            if (regex.IsMatch(encodedMessage[i].ToString()))
             {
-                decodedText.Append(_inputText[i].ToString());
+                decodedText.Append(encodedMessage[i].ToString());
                 continue;
             }
             
@@ -139,7 +148,7 @@ public class EncryptionController
             
             decodingCypherIndex++;
 
-            if (decodingCypherIndex >= _cypherWord.Length) decodingCypherIndex = 0;
+            if (decodingCypherIndex >= _cypherInputText.text.Length) decodingCypherIndex = 0;
         }
 
         return decodedText.ToString();

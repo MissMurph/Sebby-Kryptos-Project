@@ -922,9 +922,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a63b789deb0c3c43b8837798161e88b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputText: The quick brown fox jumped over the lazy dog. The Fox hurt it's leg,
-    help
-  _cypherWord: forget
+  _inputText: {fileID: 1894132235}
+  _outputText: {fileID: 1647535580}
+  _cypherInputText: {fileID: 1556686311}
 --- !u!4 &977345311
 Transform:
   m_ObjectHideFlags: 0
@@ -1023,7 +1023,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1057918248}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 977345310}
+        m_TargetAssemblyTypeName: EncryptionController, Assembly-CSharp
+        m_MethodName: EncodeText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1057918248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1415,7 +1427,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1203647283}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 977345310}
+        m_TargetAssemblyTypeName: EncryptionController, Assembly-CSharp
+        m_MethodName: DecodeText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1203647283
 MonoBehaviour:
   m_ObjectHideFlags: 0
