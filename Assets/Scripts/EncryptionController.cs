@@ -5,7 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-public class Test : MonoBehaviour
+public class EncryptionController
+    : MonoBehaviour
 {
     private static char[] ALPHABET = {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
