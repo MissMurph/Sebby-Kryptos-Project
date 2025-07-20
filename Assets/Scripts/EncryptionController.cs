@@ -218,6 +218,10 @@ namespace Ratworx.Kryptos
             Debug.LogError($"Character not found in Cypherbet. How have you written a non-existent character?");
             return -1;
         }
-    }
 
+        public void QuitApp()
+        {
+            Application.Quit();
+        }
+    }
 }
