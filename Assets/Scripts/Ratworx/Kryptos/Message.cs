@@ -28,7 +28,7 @@ namespace Ratworx.Kryptos
 
             var decryptedText = EncryptionController.DecodeVigenereMessage(splitString[1], ChatTest.DecryptionCypher);
 
-            _text.text = decryptedText;
+            _text.text = $"{splitString[0]}: {decryptedText}";
         }
 
         private void OnDecryptCypherChanged(string cypher) => DecryptMessage();

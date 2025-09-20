@@ -39,7 +39,8 @@ namespace Ratworx.Kryptos
         
         private void Awake()
         {
-            _userData = Resources.Load<UserInfo>("UserData");
+            if (!UserDataLoader.TryLoadUserData(out _userData))
+                _userData = new UserInfo();
             
             if (_userData is null
                 || string.IsNullOrEmpty(_userData.UserId))
@@ -101,6 +102,8 @@ namespace Ratworx.Kryptos
         public void OnConnected()
         {
             Debug.Log($"Connected to chat with UserId {_userData.UserId}");
+
+            SaveUserData();
             
             UpdateCypherDropdowns();
 
@@ -113,8 +116,14 @@ namespace Ratworx.Kryptos
                 Debug.LogError($"Failed to subscribe to channel {CHANNEL}");
         }
 
+        private void SaveUserData() => UserDataLoader.WriteUserData(_userData).ForgetTaskSafely();
+
         private void UpdateCypherDropdowns()
         {
+            if (_userData?.Cyphers is null
+                || _userData?.Cyphers.Length == 0) 
+                return;
+            
             _encryptionDropdown.options = new List<TMP_Dropdown.OptionData>();
             _decryptionDropdown.options = new List<TMP_Dropdown.OptionData>();
             
@@ -126,6 +135,8 @@ namespace Ratworx.Kryptos
             
             _encryptionDropdown.RefreshShownValue();
             _decryptionDropdown.RefreshShownValue();
+            
+            ChangeDecryptionCypher(_decryptionDropdown.value);
         }
 
         public void OnChatStateChange(ChatState state)
@@ -183,9 +194,11 @@ namespace Ratworx.Kryptos
 
         public void AddCypher()
         {
-            if (string.IsNullOrEmpty(_addCypherInputText.text)) ;
+            if (string.IsNullOrEmpty(_addCypherInputText.text)) return;
+
+            int newLength = _userData?.Cyphers.Length > 0 ? _userData.Cyphers.Length + 1 : 1;
             
-            var newArray = new string[_userData.Cyphers.Length + 1];
+            var newArray = new string[newLength];
 
             for (int i = 0; i < _userData.Cyphers.Length; i++)
             {
@@ -197,6 +210,8 @@ namespace Ratworx.Kryptos
             _userData.Cyphers = newArray;
             
             UpdateCypherDropdowns();
+            
+            SaveUserData();
         }
     }
 }

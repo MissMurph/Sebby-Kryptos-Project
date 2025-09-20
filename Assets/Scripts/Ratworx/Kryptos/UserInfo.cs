@@ -1,11 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace Ratworx.Kryptos
 {
-    [CreateAssetMenu(fileName = "UserData.asset", menuName = "Ratworx/UserData")]
-    public class UserInfo : ScriptableObject
+    [Serializable]
+    public class UserInfo
     {
-        public string UserId;
-        public string[] Cyphers;
+        public string UserId = string.Empty;
+        public string[] Cyphers = Array.Empty<string>();
     }
 }
