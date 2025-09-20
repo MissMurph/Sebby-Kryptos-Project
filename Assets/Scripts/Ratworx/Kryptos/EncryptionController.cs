@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -23,6 +24,7 @@ namespace Ratworx.Kryptos
         {
             // TODO: Create a way of displaying an error to a user here
             if (string.IsNullOrEmpty(_cypherInputText.text)
+                || IsCypherInvalid(_cypherInputText.text)
                 || string.IsNullOrEmpty(_inputText.text)) return;
             
             CreateVigenereCypherbet();
@@ -36,6 +38,7 @@ namespace Ratworx.Kryptos
         {
             // TODO: Create a way of displaying an error to a user here
             if (string.IsNullOrEmpty(_cypherInputText.text)
+                || IsCypherInvalid(_cypherInputText.text)
                 || string.IsNullOrEmpty(_inputText.text)) return;
             
             CreateVigenereCypherbet();
@@ -43,6 +46,21 @@ namespace Ratworx.Kryptos
             string decodedText = DecodeVigenereMessage(_inputText.text);
 
             _outputText.text = decodedText;
+        }
+
+        private bool IsCypherInvalid(string cypher)
+        {
+            List<char> foundChars = new();
+            
+            foreach (var character in cypher)
+            {
+                if (foundChars.Contains(character)) 
+                    return true;
+                
+                foundChars.Add(character);
+            }
+
+            return false;
         }
 
         /// <summary>
