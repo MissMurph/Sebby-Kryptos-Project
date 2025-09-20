@@ -4,18 +4,8 @@ using UnityEngine;
 
 namespace Ratworx.Kryptos
 {
-    public class ChatTEst : MonoBehaviour
+    public class ChatTest : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        
     }
 }
