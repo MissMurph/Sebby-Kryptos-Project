@@ -20,7 +20,7 @@ namespace Ratworx.Kryptos
 
         private string _cypherBet;
 
-        public void EncodeText()
+        /*public void EncodeText()
         {
             // TODO: Create a way of displaying an error to a user here
             if (string.IsNullOrEmpty(_cypherInputText.text)
@@ -46,7 +46,7 @@ namespace Ratworx.Kryptos
             string decodedText = DecodeVigenereMessage(_inputText.text);
 
             _outputText.text = decodedText;
-        }
+        }*/
 
         private bool IsCypherInvalid(string cypher)
         {
@@ -69,18 +69,18 @@ namespace Ratworx.Kryptos
         /// sequentially place these at the start of the string and then append the remaining letters of the alphabet
         /// onto this string, filtering out characters we've already added.
         /// </summary>
-        private void CreateVigenereCypherbet()
+        private static string CreateVigenereCypherbet(string cypher)
         {
             var stringBuilder = new StringBuilder(string.Empty);
 
             int index = 0;
 
-            while (index < _cypherInputText.text.Length - 1)
+            while (index < cypher.Length - 1)
             {
                 foreach (var character in ALPHABET)
                 {
-                    if (index >= _cypherInputText.text.Length) break;
-                    if (character == _cypherInputText.text[index])
+                    if (index >= cypher.Length) break;
+                    if (character == cypher[index])
                     {
                         stringBuilder.Append(character);
                         index++;
@@ -94,7 +94,7 @@ namespace Ratworx.Kryptos
                 stringBuilder.Append(ALPHABET[i]);
             }
 
-            _cypherBet = stringBuilder.ToString();
+            return stringBuilder.ToString();
         }
 
         /// <summary>
@@ -107,8 +107,9 @@ namespace Ratworx.Kryptos
         /// <remarks>This will respect casing and non-alphabetical characters. These will simply be copied over to the
         /// encoded message without any change to them.</remarks>
         /// <returns>The encrypted message.</returns>
-        private string EncodeVigenereMessage(string message)
+        public static string EncodeVigenereMessage(string message, string cypher)
         {
+            var cypherBet = CreateVigenereCypherbet(cypher);
             var encodedText = new StringBuilder(string.Empty);
 
             int cypherIndex = 0;
@@ -129,9 +130,9 @@ namespace Ratworx.Kryptos
 
                 int cypheredIndex = alphabetIndex + cypherIndex;
 
-                if (cypheredIndex >= _cypherBet.Length) cypheredIndex -= _cypherBet.Length;
+                if (cypheredIndex >= cypherBet.Length) cypheredIndex -= cypherBet.Length;
 
-                if (cypheredIndex < 0 || cypheredIndex >= _cypherBet.Length)
+                if (cypheredIndex < 0 || cypheredIndex >= cypherBet.Length)
                 {
                     Debug.LogError(
                         $"Cypher out of range:" +
@@ -140,7 +141,7 @@ namespace Ratworx.Kryptos
                         $"\ncypher word position: {cypherIndex}");
                 }
 
-                var encodedCharacter = _cypherBet[cypheredIndex].ToString();
+                var encodedCharacter = cypherBet[cypheredIndex].ToString();
 
                 if (isCased) encodedCharacter = encodedCharacter.ToUpperInvariant();
 
@@ -148,7 +149,7 @@ namespace Ratworx.Kryptos
 
                 cypherIndex++;
 
-                if (cypherIndex >= _cypherInputText.text.Length) cypherIndex = 0;
+                if (cypherIndex >= cypher.Length) cypherIndex = 0;
             }
 
             return encodedText.ToString();
@@ -164,8 +165,9 @@ namespace Ratworx.Kryptos
         /// <remarks>This will respect casing and non-alphabetical characters. These will simply be copied over to the
         /// decoded message without any change to them.</remarks>
         /// <returns>The decrypted message.</returns>
-        private string DecodeVigenereMessage(string encodedMessage)
+        public static string DecodeVigenereMessage(string encodedMessage, string cypher)
         {
+            var cypherBet = CreateVigenereCypherbet(cypher);
             var decodedText = new StringBuilder(string.Empty);
 
             int decodingCypherIndex = 0;
@@ -182,13 +184,13 @@ namespace Ratworx.Kryptos
 
                 bool isCased = char.IsUpper(encodedMessage[i]);
 
-                var decodingCypheredIndex = GetCypheredIndexOfCharacter(encodedMessage[i]);
+                var decodingCypheredIndex = GetCypheredIndexOfCharacter(encodedMessage[i], cypherBet);
 
                 int cypheredIndex = decodingCypheredIndex - decodingCypherIndex;
 
-                if (cypheredIndex < 0) cypheredIndex += _cypherBet.Length;
+                if (cypheredIndex < 0) cypheredIndex += cypherBet.Length;
 
-                if (cypheredIndex < 0 || cypheredIndex >= _cypherBet.Length)
+                if (cypheredIndex < 0 || cypheredIndex >= cypherBet.Length)
                 {
                     Debug.LogError(
                         $"Cypher out of range:" +
@@ -205,13 +207,13 @@ namespace Ratworx.Kryptos
 
                 decodingCypherIndex++;
 
-                if (decodingCypherIndex >= _cypherInputText.text.Length) decodingCypherIndex = 0;
+                if (decodingCypherIndex >= cypher.Length) decodingCypherIndex = 0;
             }
 
             return decodedText.ToString();
         }
 
-        private int GetAlphabetIndexOfLetter(char character)
+        private static int GetAlphabetIndexOfLetter(char character)
         {
             var lowerInvariant = character.ToString().ToLowerInvariant();
 
@@ -224,13 +226,13 @@ namespace Ratworx.Kryptos
             return -1;
         }
 
-        private int GetCypheredIndexOfCharacter(char character)
+        private static int GetCypheredIndexOfCharacter(char character, string cypherBet)
         {
             var lowerInvariant = character.ToString().ToLowerInvariant();
 
-            for (int i = 0; i < _cypherBet.Length; i++)
+            for (int i = 0; i < cypherBet.Length; i++)
             {
-                if (_cypherBet[i] == lowerInvariant[0]) return i;
+                if (cypherBet[i] == lowerInvariant[0]) return i;
             }
 
             Debug.LogError($"Character not found in Cypherbet. How have you written a non-existent character?");

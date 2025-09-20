@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4441c4568ce34ed5827614a6de6a3d82, type: 3}
   m_Name: UserData
   m_EditorClassIdentifier: 
-  UserId: 
-  Cyphers: []
+  UserId: test
+  Cyphers:
+  - forget
