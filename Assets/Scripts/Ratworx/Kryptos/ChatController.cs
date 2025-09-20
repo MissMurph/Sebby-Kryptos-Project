@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace Ratworx.Kryptos
 {
-    public class ChatTest : MonoBehaviour, IChatClientListener
+    public class ChatController : MonoBehaviour, IChatClientListener
     {
         public static event Action<string> OnDecryptionCypherChanged;
 
@@ -84,7 +84,7 @@ namespace Ratworx.Kryptos
             
             string cypher = _encryptionDropdown.options[_encryptionDropdown.value].text;
 
-            var encryptedMessage = EncryptionController.EncodeVigenereMessage(_messageInputText.text, cypher);
+            var encryptedMessage = VigenereEncryptionHelper.EncodeVigenereMessage(_messageInputText.text, cypher);
 
             _client.PublishMessage(CHANNEL, encryptedMessage);
         }
@@ -194,7 +194,8 @@ namespace Ratworx.Kryptos
 
         public void AddCypher()
         {
-            if (string.IsNullOrEmpty(_addCypherInputText.text)) return;
+            if (string.IsNullOrEmpty(_addCypherInputText.text)
+                || !VigenereEncryptionHelper.IsCypherValid(_addCypherInputText.text)) return;
 
             int newLength = _userData?.Cyphers.Length > 0 ? _userData.Cyphers.Length + 1 : 1;
             

@@ -14,9 +14,9 @@ namespace Ratworx.Kryptos
         {
             _initialText = _text.text;
             
-            ChatTest.OnDecryptionCypherChanged += OnDecryptCypherChanged;
+            ChatController.OnDecryptionCypherChanged += OnDecryptCypherChanged;
 
-            if (!string.IsNullOrEmpty(ChatTest.DecryptionCypher)) 
+            if (!string.IsNullOrEmpty(ChatController.DecryptionCypher)) 
                 DecryptMessage();
         }
 
@@ -26,7 +26,7 @@ namespace Ratworx.Kryptos
 
             if (splitString.Length != 2) return;
 
-            var decryptedText = EncryptionController.DecodeVigenereMessage(splitString[1], ChatTest.DecryptionCypher);
+            var decryptedText = VigenereEncryptionHelper.DecodeVigenereMessage(splitString[1], ChatController.DecryptionCypher);
 
             _text.text = $"{splitString[0]}: {decryptedText}";
         }

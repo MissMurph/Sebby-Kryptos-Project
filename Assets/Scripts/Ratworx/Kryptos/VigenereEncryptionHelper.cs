@@ -1,66 +1,33 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using TMPro;
 using UnityEngine;
 
 namespace Ratworx.Kryptos
 {
-    public class EncryptionController : MonoBehaviour
+    public class VigenereEncryptionHelper : MonoBehaviour
     {
-        private static char[] ALPHABET =
+        private static readonly char[] Alphabet =
         {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z',
         };
-
-        [SerializeField] private TMP_InputField _inputText;
-        [SerializeField] private TMP_InputField _outputText;
-        [SerializeField] private TMP_InputField _cypherInputText;
-
-        private string _cypherBet;
-
-        /*public void EncodeText()
-        {
-            // TODO: Create a way of displaying an error to a user here
-            if (string.IsNullOrEmpty(_cypherInputText.text)
-                || IsCypherInvalid(_cypherInputText.text)
-                || string.IsNullOrEmpty(_inputText.text)) return;
-            
-            CreateVigenereCypherbet();
-
-            string encodedText = EncodeVigenereMessage(_inputText.text);
-
-            _outputText.text = encodedText;
-        }
-
-        public void DecodeText()
-        {
-            // TODO: Create a way of displaying an error to a user here
-            if (string.IsNullOrEmpty(_cypherInputText.text)
-                || IsCypherInvalid(_cypherInputText.text)
-                || string.IsNullOrEmpty(_inputText.text)) return;
-            
-            CreateVigenereCypherbet();
-
-            string decodedText = DecodeVigenereMessage(_inputText.text);
-
-            _outputText.text = decodedText;
-        }*/
-
-        private bool IsCypherInvalid(string cypher)
+        
+        public static bool IsCypherValid(string cypher)
         {
             List<char> foundChars = new();
             
             foreach (var character in cypher)
             {
-                if (foundChars.Contains(character)) 
-                    return true;
+                if (foundChars.Contains(character)
+                    || !Alphabet.Contains(character)) 
+                    return false;
                 
                 foundChars.Add(character);
             }
 
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -77,7 +44,7 @@ namespace Ratworx.Kryptos
 
             while (index < cypher.Length - 1)
             {
-                foreach (var character in ALPHABET)
+                foreach (var character in Alphabet)
                 {
                     if (index >= cypher.Length) break;
                     if (character == cypher[index])
@@ -88,10 +55,10 @@ namespace Ratworx.Kryptos
                 }
             }
 
-            for (int i = 0; i < ALPHABET.Length; i++)
+            for (int i = 0; i < Alphabet.Length; i++)
             {
-                if (stringBuilder.ToString().Contains(ALPHABET[i])) continue;
-                stringBuilder.Append(ALPHABET[i]);
+                if (stringBuilder.ToString().Contains(Alphabet[i])) continue;
+                stringBuilder.Append(Alphabet[i]);
             }
 
             return stringBuilder.ToString();
@@ -199,7 +166,7 @@ namespace Ratworx.Kryptos
                         $"\ncypher word position: {decodingCypherIndex}");
                 }
 
-                var decodedCharacter = ALPHABET[cypheredIndex].ToString();
+                var decodedCharacter = Alphabet[cypheredIndex].ToString();
 
                 if (isCased) decodedCharacter = decodedCharacter.ToUpperInvariant();
 
@@ -217,9 +184,9 @@ namespace Ratworx.Kryptos
         {
             var lowerInvariant = character.ToString().ToLowerInvariant();
 
-            for (int i = 0; i < ALPHABET.Length; i++)
+            for (int i = 0; i < Alphabet.Length; i++)
             {
-                if (ALPHABET[i] == lowerInvariant[0]) return i;
+                if (Alphabet[i] == lowerInvariant[0]) return i;
             }
 
             Debug.LogError($"Character not found in Alphabet. How have you written a non-existent character?");
@@ -237,11 +204,6 @@ namespace Ratworx.Kryptos
 
             Debug.LogError($"Character not found in Cypherbet. How have you written a non-existent character?");
             return -1;
-        }
-
-        public void QuitApp()
-        {
-            Application.Quit();
         }
     }
 }
